@@ -1069,17 +1069,33 @@ public class Parser {
 
     private JExpression relationalExpression() {
         int line = scanner.token().line();
-        JExpression lhs = additiveExpression();
+        JExpression lhs = shiftExpression();
         if (have(GT)) {
-            return new JGreaterThanOp(line, lhs, additiveExpression());
+            return new JGreaterThanOp(line, lhs, shiftExpression());
         } else if (have(LE)) {
-            return new JLessEqualOp(line, lhs, additiveExpression());
+            return new JLessEqualOp(line, lhs, shiftExpression());
         } else if (have(INSTANCEOF)) {
             return new JInstanceOfOp(line, lhs, referenceType());
         } else {
             return lhs;
         }
     }
+
+
+    private JExpression shiftExpression() {
+        int line = scanner.token().line();
+        JExpression lhs = additiveExpression();
+            if (have(RSHIFT)) {
+                return new JRSHIFTOp(line,lhs,additiveExpression());
+            } else if (have(URSHIFT)) {
+                return new JURSHIFTOp(line,lhs,additiveExpression());
+            } else if (have(LSHIFT)) {
+                return new JLSHIFTOp(line,lhs,additiveExpression());
+            } else {
+                return lhs;
+            }
+    }
+
 
     /**
      * Parse an additive expression.
@@ -1101,6 +1117,12 @@ public class Parser {
                 lhs = new JSubtractOp(line, lhs, multiplicativeExpression());
             } else if (have(PLUS)) {
                 lhs = new JPlusOp(line, lhs, multiplicativeExpression());
+            } else if (have(OR)) {
+                lhs = new JOROp(line, lhs, multiplicativeExpression());
+            } else if (have(AND)) {
+                lhs = new JANDOp(line, lhs, multiplicativeExpression());
+            } else if (have(XOR)) {
+                lhs = new JXOROp(line, lhs, multiplicativeExpression());
             } else {
                 more = false;
             }
@@ -1155,7 +1177,12 @@ public class Parser {
             return new JPreIncrementOp(line, unaryExpression());
         } else if (have(MINUS)) {
             return new JNegateOp(line, unaryExpression());
-        } else {
+        } else if (have(NOT)) { 
+            return new JUnaryComplement(line,unaryExpression());
+        } else if (have(PLUS)) {
+            return new JUnaryPlusOp(line,unaryExpression());
+        }
+        else {
             return simpleUnaryExpression();
         }
     }

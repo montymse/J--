@@ -99,6 +99,34 @@ class Scanner {
         reserved.put(VOID.image(), VOID);
         reserved.put(WHILE.image(), WHILE);
 
+        reserved.put(BREAK.image(),BREAK);
+        reserved.put(BYTE.image(),BYTE);
+        reserved.put(CASE.image(),CASE);
+        reserved.put(CATCH.image(), CATCH);
+        reserved.put(CONST.image(), CONST);
+        reserved.put(CONTINUE.image(), CONTINUE);
+        reserved.put(DEFAULT.image(), DEFAULT);
+        reserved.put(DO.image(),DO);
+        reserved.put(DOUBLE.image(), DOUBLE);
+        reserved.put(FINAL.image(),FINAL);
+        reserved.put(FINALLY.image(), FINALLY);
+        reserved.put(FLOAT.image(), FLOAT);
+        reserved.put(FOR.image(),FOR);
+        reserved.put(GOTO.image(), GOTO);
+        reserved.put(IMPLEMENTS.image(), IMPLEMENTS);
+        reserved.put(INTERFACE.image(), INTERFACE);
+        reserved.put(LONG.image(),LONG);
+        reserved.put(NATIVE.image(), NATIVE);
+        reserved.put(SHORT.image(), SHORT);
+        reserved.put(STRICTFP.image(), STRICTFP);
+        reserved.put(SWITCH.image(), SWITCH);
+        reserved.put(SYNCHRONIZED.image(), SYNCHRONIZED);
+        reserved.put(THROW.image(), THROW);
+        reserved.put(THROWS.image(), THROWS);
+        reserved.put(TRANSIENT.image(), TRANSIENT);
+        reserved.put(TRY.image(), TRY);
+        reserved.put(VOLATILE.image(), VOLATILE);
+
         // Prime the pump.
         nextCh();
     }
@@ -123,6 +151,9 @@ class Scanner {
                     while (ch != '\n' && ch != EOFCH) {
                         nextCh();
                     }
+                } else if (ch == '=') {
+                    nextCh();
+                    return new TokenInfo(DIV_ASSIGN,line);
                 } else {
                     return new TokenInfo(DIV, line);
                 }
@@ -156,6 +187,12 @@ class Scanner {
             case ',':
                 nextCh();
                 return new TokenInfo(COMMA, line);
+            case ':':
+                nextCh();
+                return new TokenInfo(COLON, line);
+            case '?':
+                nextCh();
+                return new TokenInfo(Conditional, line);
             case '=':
                 nextCh();
                 if (ch == '=') {
@@ -166,9 +203,17 @@ class Scanner {
                 }
             case '!':
                 nextCh();
+                if (ch == '=') {
+                    nextCh();
+                    return new TokenInfo(LNOT_ASSIGN, line);
+                }
                 return new TokenInfo(LNOT, line);
             case '*':
                 nextCh();
+                if (ch == '=') {
+                    nextCh();
+                    return new TokenInfo(STAR_ASSIGN, line);
+                }
                 return new TokenInfo(STAR, line);
             case '+':
                 nextCh();
@@ -186,32 +231,77 @@ class Scanner {
                 if (ch == '-') {
                     nextCh();
                     return new TokenInfo(DEC, line);
-                } else {
+                } else if (ch == '='){
+                    nextCh();
+                    return new TokenInfo(MINUS_ASSIGN, line);}
+                else {
                     return new TokenInfo(MINUS, line);
                 }
             case '%':
                 nextCh();
+                if (ch == '=') {
+                    nextCh();
+                    return new TokenInfo(REM_ASSIGN,line);
+                }
                 return new TokenInfo(REM, line);
             case '|':
                 nextCh();
+                if (ch == '=') {
+                    nextCh();
+                    return new TokenInfo(OR_ASSIGN,line);
+                } else if (ch == '|') {
+                    nextCh();
+                    return new TokenInfo(LOGICAL_OR,line);
+                }
                 return new TokenInfo(OR, line);
             case '~':
                 nextCh();
                 return new TokenInfo(NOT, line);
             case '^':
                 nextCh();
+                if (ch == '=') {
+                    nextCh();
+                    return new TokenInfo(XOR_ASSIGN,line);
+                }
                 return new TokenInfo(XOR, line);
             case '&':
                 nextCh();
                 if (ch == '&') {
                     nextCh();
                     return new TokenInfo(LAND, line);
+                } else if (ch == '=') {
+                    nextCh();
+                    return new TokenInfo(AND_ASSIGN,line);
                 } else {
                     return new TokenInfo(AND, line);
                 }
             case '>':
                 nextCh();
-                return new TokenInfo(GT, line);
+                // if (ch == '=') {
+                //     nextCh();
+                //     return new TokenInfo(GE)
+                // }
+                if (ch == '>') {
+                    nextCh();
+                    if (ch == '>') {
+                        nextCh();
+                        if (ch == '=') {
+                            nextCh();
+                            return new TokenInfo(URSHIFT_ASSIGN,line);
+                        }
+                        return new TokenInfo(URSHIFT,line);
+                    } else if (ch == '=') {
+                        nextCh();
+                        return new TokenInfo(URSHIFT_ASSIGN,line);
+                    }
+                    return new TokenInfo(RSHIFT,line);
+                } if (ch == '=') {
+                    nextCh();
+                    return new TokenInfo(GE,line);
+                } else {
+                    nextCh();
+                    return new TokenInfo(GT,line);
+                }
             case '<':
                 nextCh();
                 if (ch == '=') {
@@ -219,10 +309,12 @@ class Scanner {
                     return new TokenInfo(LE, line);}
                 else if (ch == '<') {
                         nextCh();
+                        if (ch == '=') {
+                            return new TokenInfo(LSHIFT_ASSIGN,line);
+                        }
                         return new TokenInfo(LSHIFT, line);
                 } else {
-                    reportScannerError("Operator < is not supported in j--.");
-                    return getNextToken();
+                    return new TokenInfo(LT, line);
                 }
             case '\'':
                 buffer = new StringBuffer();

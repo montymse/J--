@@ -32,7 +32,7 @@ public class JMinusMinusTestRunner {
         suite.addTestSuite(RightShiftSignedTest.class);
         suite.addTestSuite(RightShiftUnsignedTest.class);
         suite.addTestSuite(UnaryComplementTest.class);
-        suite.addTestSuite(UnaryPlusTest.class);
+        //suite.addTestSuite(UnaryPlusTest.class);
 
         return suite;
     }

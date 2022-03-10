@@ -345,3 +345,48 @@ class JPreIncrementOp extends JUnaryExpression {
     }
 
 }
+
+
+class JUnaryComplement extends JUnaryExpression {
+
+
+    public JUnaryComplement(int line, JExpression arg) {
+        super(line,"~", arg);
+    }
+
+
+    public JExpression analyze(Context context) {
+        arg = (JExpression) arg.analyze(context);
+        arg.type().mustMatchExpected(line(), Type.INT);
+        type = Type.INT;
+        
+        return this;
+    }
+
+    public void codegen(CLEmitter output) {
+        arg.codegen(output);
+        output.addNoArgInstruction(INEG);
+    }
+
+}
+
+/*
+class JUnaryPlusOp extends JUnaryExpression {
+
+    public JUnaryPlusOp(int line, JExpression arg) {
+        super(line, "+", arg);
+    }
+
+    public JExpression analyze(Context context) {
+        arg = arg.analyze(context);
+        arg.type().mustMatchExpected(line(), Type.INT);
+        type = Type.INT;
+        return this;
+    }
+
+    public void codegen(CLEmitter output) {
+        arg.codegen(output);
+        output.addNoArgInstruction(IADD);
+    }
+
+}*/

@@ -19,20 +19,35 @@ enum TokenKind {
     INSTANCEOF("instanceof"), INT("int"), NEW("new"), PACKAGE("package"), 
     PRIVATE("private"), PROTECTED("protected"), PUBLIC("public"), 
     RETURN("return"), STATIC("static"), SUPER("super"), THIS("this"), 
-    VOID("void"), WHILE("while"), 
+    VOID("void"), WHILE("while"),
+
+    // Step 1 Reserved words
+    BREAK("break"), BYTE("byte"), CASE("case"),CATCH("catch"),CONST("const"),
+    CONTINUE("continue"), DEFAULT("default"),DO("do"),DOUBLE("double"),FINAL("final"),
+    FINALLY("finally"),FLOAT("float"),FOR("for"),GOTO("goto"),
+    IMPLEMENTS("implements"),INTERFACE("interface"),LONG("long"),
+    NATIVE("native"),SHORT("short"),STRICTFP("strictfp"),SWITCH("switch"),
+    SYNCHRONIZED("synchronized"),THROW("throw"),THROWS("throws"),
+    TRANSIENT("transient"),TRY("try"),VOLATILE("volatile"),
 
     // Operators
     ASSIGN("="), DEC("--"), EQUAL("=="), GT(">"), INC("++"), LAND("&&"), 
     LE("<="), LNOT("!"), MINUS("-"), PLUS("+"), PLUS_ASSIGN("+="), STAR("*"),
     DIV("/"), REM("%"),
 
-    // Step 0
+    // Step 0 Operators
     NOT("~"), AND("&"), OR("|"), XOR("^"), LSHIFT("<<"),
     RSHIFT(">>"), URSHIFT(">>>"),
 
+    // Step 1 Operators
+    MINUS_ASSIGN("-="),Conditional("?"), STAR_ASSIGN("*="),LT("<"),
+    LSHIFT_ASSIGN("<<="),LNOT_ASSIGN("!="),REM_ASSIGN("%="),XOR_ASSIGN("^="),
+    DIV_ASSIGN("/="),RSHIFT_ASSIGN(">>="),OR_ASSIGN("|="),
+    LOGICAL_OR("||"),GE(">="),AND_ASSIGN("&="),URSHIFT_ASSIGN(">>>="),
+
     // Separators
     LPAREN("("), RPAREN(")"), LCURLY("{"), RCURLY("}"), LBRACK("["), 
-    RBRACK("]"), SEMI(";"), COMMA(","), DOT("."), 
+    RBRACK("]"), SEMI(";"), COMMA(","), DOT("."),COLON(":"),
 
     // Identifiers
     IDENTIFIER("<IDENTIFIER>"), 
